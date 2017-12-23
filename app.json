@@ -1,8 +1,8 @@
 {
     "appName": "Xp Calculator",
     "description": "Shows amount of actions to get you to target xp/level",
-    "appUrl": "/RsXpCalc/",
-    "configUrl": "/RsXpCalc/app.json",
+    "appUrl": "https://wysodami.github.io/RsXpCalc/",
+    "configUrl": "https://wysodami.github.io/RsXpCalc/RsXpCalc/app.json",
     "iconUrl": "",
     "defaultWidth": 200,
     "defaultHeight": 90,
