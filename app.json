@@ -1,14 +1,13 @@
 {
     "appName": "Xp Calculator",
     "description": "Shows amount of actions to get you to target xp/level",
-    "appUrl": "https://wysodami.github.io/RsXpCalc/",
-    "configUrl": "https://wysodami.github.io/RsXpCalc/RsXpCalc/app.json",
-    "iconUrl": "",
+    "appUrl": "/RsXpCalc/",
+    "configUrl": "/RsXpCalc/app.json",
     "defaultWidth": 200,
     "defaultHeight": 90,
     "minWidth": 100,
     "minHeight": 50,
     "requestHandlers": [ ],
-    "activators": [ ],
+    "activators": [ "Set Level Target", "Set XP Target", "Clear Target" ],
     "permissions": "pixel,overlay,gamestate"
 }
