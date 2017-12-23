@@ -1,0 +1,140 @@
+<head>
+	<link rel="StyleSheet" type="text/css" href="style.css"></link>
+	<script type="text/javascript" src="jsCalc.js"></script>
+	<script type="text/javascript" src="alt1lib.js"></script>
+	<script type="text/javascript" src="runeappslib.js"></script>
+	<script type="text/javascript" src="imagedetect.js"></script>
+	<script type="text/javascript" src="xpcounter.js"></script>
+	<link rel="stylesheet" type="text/css" href="nis/nis.css"/>
+	<link rel="stylesheet" type="text/css" href="alt1-currentskin/skinstyle.css"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script>
+		var reader = new XpcounterReader();
+		var findfails = 0;
+		var hist = {};
+		
+		function start(){
+			startFindCounter();
+			setInterval(tick, 1000);
+			tick();
+		}
+		
+		function startFindCounter() {
+			if (!reader.searching) { reader.pos = null;}
+			reader.findAsync(function () {
+				reader.read();
+				var found = false;
+				for (var a in reader.skills) { if (reader.values[a] > 0) { found = true; } }
+				if (!found) { reader.pos = null; }
+
+				if (!reader.pos) { findfails++; if (findfails >= 2) { findcounterError(); } }
+				else { findfails = 0; }
+
+				if (reader.pos) { reader.showPosition();}
+				if (reader.rounded) { xpcounterRoundError();}
+				
+				tick();
+				
+			});
+			tick();
+		}
+		
+		function tick() {
+			//if (!reader.searching) {startFindCounter();}
+			reader.read();
+			//if (!skillid && reader.skills[0]) { skillid = reader.skills[0];}
+			//for (var a in hist) { hist[a].visible = false; }
+			for (var a = 0; a < reader.skills.length; a++) {
+				if (!reader.skills[a]) { continue; }
+				if (reader.values[a] == -1) { continue; }
+				skillread(reader.skills[a], reader.values[a]);
+			//	if (hist[reader.skills[a]]) { hist[reader.skills[a]].visible = true; }
+			}
+		}
+		
+		function skillread(skill, xp) {
+			if (!hist[skill])
+			{
+				hist[skill]  = {skill , xp};
+			}
+			if(document.getElementById('skill').value == hist[skill].skill)
+			{
+				if(hist[skill].xp < xp)
+				{
+					//console.log(hist[skill] + " : " + parseInt(xp - hist[skill].xp));
+					currXp = document.getElementById("xpHeader").value;
+					document.getElementById("xpHeader").value = parseInt(currXp) + (parseInt(xp) - parseInt(hist[skill].xp));
+					hist[skill].xp = xp;
+					update();
+				}
+			}
+		}
+	</script>
+</head>
+<body class="nis" onLoad="document.getElementById('current').style.display = 'none'; start(); popCategoryDropDown(); popMethodDropdown('All Items');" >
+	<div id="main" onload="calculate(document.getElementById('category').value);">
+		
+		<div style="padding-top: 10px;">
+			<!-- Select a skill -->
+			<label class="nistext" for="skill">Skill: </label>
+			<select class="nisdropdown" id='skill' onChange="populateMethod(document.getElementById('skill').value); popMethodDropdown('All Items'); popCategoryDropDown();">
+				<option selected value=""></option>
+				<option value="agi">Agility</option>
+				<option value="con">Construction</option>
+				<option value="coo">Cooking</option>
+				<option value="cra">Crafting</option>
+				<option value="div">Divination</option>
+				<option value="far">Farming</option>
+				<option value="fir">Firemaking</option>
+				<option value="fis">Fishing</option>
+				<option value="fle">Fletching</option>
+				<option value="her">Herblore</option>
+				<option value="hun">Hunter</option>
+				<option value="mag">Magic</option>
+				<option value="min">Mining</option>
+				<option value="pra">Prayer</option>
+				<option value="run">Runecrafting</option>
+				<option value="smi">Smithing</option>
+				<option value="sum">Summoning</option>
+				<option value="thi">Thieving</option>
+				<option value="woo">Woodcutting</option>
+			</select>
+		</div>
+		
+		<div>
+			<!-- Type in current skill xp -->
+			<label class="nistext">Current Xp: </label> 
+			<input class="nisinput nistext" type="number" id="txtCurrXp" value="1" onblur="calculate(document.getElementById('category').value);"/>
+		</div>
+		
+		<div>
+		<!-- Type in either goal for xp or level -->
+			<select class="nisdropdown" id="option" onChange="calculate(document.getElementById('category').value);">
+				<option selected value="level">Target Level</option>
+				<option value="xp">Target XP</option>
+			</select>
+			<input class="nisinput nistext" type="number" id="txtTarget" value="99" onblur="calculate(document.getElementById('category').value);"/>
+			</br>
+		</div>
+		
+		<!-- Helper divs to populate needed content -->
+		<div id="popCategories">
+			<label class="nistext">Category: </label>
+			<select class="nisdropdown nistext" id="category" onChange="loadTable(document.getElementById('category').value); popMethodDropdown(document.getElementById('category').value);">
+			</select>
+		</div>
+		
+		<div>
+			<label class="nistext">Multiplier: </label>
+			<input class="nisinput nistext" type="number" id="multiplier" style="width: 50px" value="0" onchange="loadTable(document.getElementById('category').value);" />
+			<label class="nistext">%</label>
+		</div>
+		<div id="popMethods"></div>
+		<div id="popTable"></div>
+	</div>
+	<div id="current">
+		<div><input class="nisinput nistext"id="xpHeader" onchange="update()"/></div>
+		<div><label class="nistext" id="actionsHeader"></label></div>
+		<div><button class="nisbutton" type="button" onclick="showFullSite();">Table</button></div>
+	</div>
+</body>
