@@ -1,0 +1,14 @@
+{
+    "appName": "Xp Calculator",
+    "description": "Shows amount of actions to get you to target xp/level",
+    "appUrl": "/",
+    "configUrl": "app.json",
+    "iconUrl": "",
+    "defaultWidth": 200,
+    "defaultHeight": 90,
+    "minWidth": 100,
+    "minHeight": 50,
+    "requestHandlers": [ ],
+    "activators": [ ],
+    "permissions": "pixel,overlay,gamestate"
+}
