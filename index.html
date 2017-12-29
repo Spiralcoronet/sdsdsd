@@ -9,13 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="nis/nis.css"/>
 	<link rel="stylesheet" type="text/css" href="alt1-currentskin/skinstyle.css"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script>
-		//window.dataLayer = window.dataLayer || [];
-	  	//function gtag(){dataLayer.push(arguments);}
-	  	//gtag('js', new Date());
-
-	  	//gtag('config', 'UA-111680959-1');
-		
+	<script>		
 		<!-- Google Analytics -->
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -28,7 +22,6 @@
 		
 		var reader = new XpcounterReader();
 		var findfails = 0;
-		var sec = 0;
 		var hist = {};
 		
 		// ==========================================================
@@ -84,14 +77,6 @@
 				if (reader.values[a] == -1) { continue; }
 				skillread(reader.skills[a], reader.values[a]);
 			}
-			
-			// this is just for google analytics, seeing how many active users there are 
-			if(sec == 1800) // 1 hour
-			{
-				ga('send', 'pageview', {'sessionControl': 'start'});
-				sec = 0;
-			}
-			sec += 1;
 		}
 		
 		// ==========================================================
