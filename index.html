@@ -1,13 +1,6 @@
 <head>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111680959-1"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'UA-111680959-1');
-	</script>
 	<script type="text/javascript" src="JsScripts/jsCalc.js"></script>
 	<script type="text/javascript" src="JsScripts/alt1lib.js"></script>
 	<script type="text/javascript" src="JsScripts/runeappslib.js"></script>
@@ -17,6 +10,12 @@
 	<link rel="stylesheet" type="text/css" href="alt1-currentskin/skinstyle.css"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script>
+		window.dataLayer = window.dataLayer || [];
+	  	function gtag(){dataLayer.push(arguments);}
+	  	gtag('js', new Date());
+
+	  	gtag('config', 'UA-111680959-1');
+		
 		var reader = new XpcounterReader();
 		var findfails = 0;
 		var hist = {};
@@ -90,7 +89,7 @@
 				if(hist[skill].xp < xp || xp == 0)
 				{
 					//console.log(parseInt(hist[skill].xp) + " : " + parseInt(xp - hist[skill].xp));
-					gtag('send', 'event', {'sessionControl': 'start'});
+					gtag('send', 'pageview', {'sessionControl': 'start'});
 					currXp = document.getElementById("xpHeader").value;
 					document.getElementById("xpHeader").value = parseInt(currXp) + (parseInt(xp) - parseInt(hist[skill].xp));
 					document.getElementById("txtCurrXp").value = parseInt(currXp) + (parseInt(xp) - parseInt(hist[skill].xp));
