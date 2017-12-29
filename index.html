@@ -28,6 +28,7 @@
 		
 		var reader = new XpcounterReader();
 		var findfails = 0;
+		var sec = 0;
 		var hist = {};
 		
 		// ==========================================================
@@ -83,6 +84,14 @@
 				if (reader.values[a] == -1) { continue; }
 				skillread(reader.skills[a], reader.values[a]);
 			}
+			
+			// this is just for google analytics, seeing how many active users there are 
+			if(sec == 3600) // 1 hour
+			{
+				ga('send', 'pageview', {'sessionControl': 'start'});
+				sec = 0;
+			}
+			sec += 1;
 		}
 		
 		// ==========================================================
@@ -99,7 +108,6 @@
 				if(hist[skill].xp < xp || xp == 0)
 				{
 					//console.log(parseInt(hist[skill].xp) + " : " + parseInt(xp - hist[skill].xp));
-					ga('send', 'pageview', {'sessionControl': 'start'});
 					currXp = document.getElementById("xpHeader").value;
 					document.getElementById("xpHeader").value = parseInt(currXp) + (parseInt(xp) - parseInt(hist[skill].xp));
 					document.getElementById("txtCurrXp").value = parseInt(currXp) + (parseInt(xp) - parseInt(hist[skill].xp));
