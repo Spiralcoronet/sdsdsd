@@ -1,3 +1,10 @@
+
+12/28/2017
+===========================================================================================================================
+- Lots of code clean up and created a more clean structure of files
+- Fixed an issue with numbers that had commas in the xp column returning only the first number before the comma and 
+  messing up calculations
+
 12/23/2017
 ===========================================================================================================================
 - Added initial project

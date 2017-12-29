@@ -1,7 +1,11 @@
 var method = new Array();
 var category = new Array();
 
-function loadTable(category){
+// ==========================================================
+// Populates the table from method and cateogry arrays
+// ==========================================================
+function loadTable(category)
+{
 	var heading = new Array();
 	heading[0] = "Level";
 	heading[1] = "XP";
@@ -20,28 +24,37 @@ function loadTable(category){
 	// Create Headers
 	var tr = document.createElement('TR');
 	tableBody.appendChild(tr);
-	for (i = 0; i < heading.length; i++){
+	for (i = 0; i < heading.length; i++)
+	{
 		var th = document.createElement('TH')
 		th.width = '75';
 		th.appendChild(document.createTextNode(heading[i]));
 		tr.appendChild(th);
 	}
 	
-	var multiplier = parseFloat(document.getElementById("multiplier").value / 100);
+	var multiplier = parseFloat(document.getElementById("txtMultiplier").value / 100);
 	
 	// Populate with methods
-	for(i = 0; i < method.length; i++) {
-		if(method[i][4] == category || category == "All Items"){
+	for(i = 0; i < method.length; i++) 
+	{
+		if(method[i][4] == category || category == "All Items")
+		{
 			var tr = document.createElement('TR');
-			for(j = 0; j < method[i].length-1; j++){
+			for(j = 0; j < method[i].length-1; j++)
+			{
 				var td = document.createElement('TD');
-				if(j == 3) {td.id = method[i][2] + ' Actions';}
-				if(multiplier != 0 && j == 1) {
+				if(j == 3)
+				{
+					td.id = method[i][2] + ' Actions';
+				}
+				if(multiplier != 0 && j == 1) 
+				{
 					var newXp = method[i][j] + (method[i][j] * multiplier);
 					td.id = method[i][2] + " xp";
 					td.appendChild(document.createTextNode(addCommas((Math.round(newXp * 10) / 10).toFixed(1))));
 				}
-				else{
+				else
+				{
 					if(j == 1) {td.id = method[i][2] + " xp";}
 					td.appendChild(document.createTextNode(addCommas(method[i][j])));
 				}
@@ -54,35 +67,16 @@ function loadTable(category){
 	calculate(category);
 }
 
-// populate the dropdown so that we can choose what method we want to focus
-function popMethodDropdown(category){
-	var myDropdownDiv = document.getElementById("popMethods");
-	var selectTag = document.createElement("select");
-	selectTag.id = "selectedMethod";
-	selectTag.className = "nisdropdown"
-	myDropdownDiv.innerHTML = "<label class='nistext'>Method: </label>";
-	
-	for(i = 0; i < method.length; i++){
-		if(method[i][4] == category || category == "All Items"){
-			var optionTag = document.createElement("option");
-			var name = method[i][2];
-			optionTag.value = name;
-			optionTag.innerHTML = name;
-			selectTag.appendChild(optionTag);
-		}
-	}
-	
-	myDropdownDiv.appendChild(selectTag);
-	myDropdownDiv.innerHTML += "<div><button class='nisbutton' type='button' onClick='showSelected();'>Train!</button></div>";
-}
-
-// populate the dropdown so that we can choose category we want
+// ==========================================================
+// Populates the Category dropdown
+// ==========================================================
 function popCategoryDropDown()
 {
 	var selectTag = document.getElementById("category");
 	selectTag.innerHTML = "";
 
-	for(i = 0; i < category.length; i++){
+	for(i = 0; i < category.length; i++)
+	{
 		var optionTag = document.createElement("option");
 		var name = category[i];
 		optionTag.value = name;
@@ -91,97 +85,155 @@ function popCategoryDropDown()
 	}
 }
 
-// Show the div and hide table to view a more conicse method
-function showSelected(){
-	var div = document.getElementById("main");
-	var show = document.getElementById("current");
-
-	if(div.style.display != "none") {
-		document.getElementById("xpHeader").value = document.getElementById("txtCurrXp").value;
-		var method = document.getElementById("selectedMethod").value
-		document.getElementById("actionsHeader").innerHTML = method +  "</br>" + document.getElementById(method + " Actions").innerHTML ;
-		
-		div.style.display = "none";
-		show.style.display = "block";
+// ==========================================================
+// Creates and populates  the Method Dropdown
+// ==========================================================
+function popMethodDropdown(category)
+{
+	var selectTag = document.getElementById("methodDropdown");
+	
+	selectTag.innerHTML = ''; // Clear the tag before repopulating it
+	
+	for(i = 0; i < method.length; i++)
+	{
+		if(method[i][4] == category || category == "All Items"){
+			var optionTag = document.createElement("option");
+			var name = method[i][2];
+			optionTag.value = name;
+			optionTag.innerHTML = name;
+			selectTag.appendChild(optionTag);
+		}
 	}
 }
 
+// ==========================================================
+// Shows the training div and hides table to view a more conicse method
+// ==========================================================
+function showTrainingDiv()
+{
+	var main = document.getElementById("main");
+	var trainingPage = document.getElementById("trainingPage");
+
+	if(main.style.display != "none") 
+	{
+		document.getElementById("xpHeader").value = document.getElementById("txtCurrXp").value;
+		var method = document.getElementById("methodDropdown").value
+		document.getElementById("actionsHeader").innerHTML = method +  "</br>" + document.getElementById(method + " Actions").innerHTML ;
+		
+		main.style.display = "none";
+		trainingPage.style.display = "block";
+	}
+}
+
+// ==========================================================
 // Show the full site with tables and options
-function showFullSite(){
-	var div = document.getElementById("main");
-	var current = document.getElementById("current");
-	if(current.style.display != "none")
+// ==========================================================
+function showFullSite()
+{
+	var main = document.getElementById("main");
+	var trainingPage = document.getElementById("trainingPage");
+	if(trainingPage.style.display != "none")
 	{
 		document.getElementById("txtCurrXp").value = document.getElementById("xpHeader").value;
 		
-		current.style.display = "none";
-		div.style.display = "block";
+		trainingPage.style.display = "none";
+		main.style.display = "block";
 		
 		calculate(document.getElementById("category").value);
 	}
 }
 
+// ==========================================================
 // Update the current xp of inputs
-function update(){
+// ==========================================================
+function update()
+{
 	var actionsHeader = document.getElementById("actionsHeader");
-	var xp = document.getElementById("xpHeader").value;	
-	var method = document.getElementById("selectedMethod").value;
+	var xpHeader = document.getElementById("xpHeader").value;
+	var method = document.getElementById("methodDropdown").value;
 	
-	document.getElementById("txtCurrXp").value = xp;
+	//document.getElementById("txtCurrXp").value = xpHeader;
+	
 	calculate(document.getElementById("category").value);
-	document.getElementById("actionsHeader").innerHTML = method +  "</br>" + document.getElementById(method + " Actions").innerHTML;
+	actionsHeader.innerHTML = method +  "</br>" + document.getElementById(method + " Actions").innerHTML;
 }
 
-// calculates the needed amount of actions
-function calculate(category) {
+// ==========================================================
+// Calculates the needed amount of actions
+// ==========================================================
+function calculate(category) 
+{
 	var currentXp = document.getElementById("txtCurrXp").value;
 	var goalXp;
-	if(document.getElementById("option").value == "level") {
+	
+	if(document.getElementById("option").value == "level") 
+	{
 		goalXp = getXpFromLevel(document.getElementById("txtTarget").value);
 	}
-	else {
+	else 
+	{
 		goalXp = document.getElementById("txtTarget").value;
 	}
-	var XpLeft = goalXp - currentXp;
-	var actions = 0;
 	
-	for(i = 0; i < method.length; i++){
-		if(method[i][4] == category || category == "All Items"){
+	var XpLeft = goalXp - currentXp;
+	
+	
+	for(i = 0; i < method.length; i++)
+	{
+		if(method[i][4] == category || category == "All Items")
+		{
 			var name = method[i][2] + " Actions";
-			var xpGiven = parseFloat(document.getElementById(method[i][2] + " xp").innerHTML);//method[i][1];
+			var xpGiven = parseFloat(document.getElementById(method[i][2] + " xp").innerHTML.replace(',', ''));
 			document.getElementById(name).innerHTML = addCommas(Math.ceil(XpLeft / xpGiven));
 		}
 	}
 }
 
-function getXpFromLevel(level){
+// ==========================================================
+// Depending on level it will return the xp needed for that level
+// ==========================================================
+function getXpFromLevel(level)
+{
 	var e = 0;
-	for(i = 0; i < level; i++){
+	for(i = 0; i < level; i++)
+	{
 		e += Math.floor(i + 300 * Math.pow(2, i / 7));
 	}
 	return Math.min(Math.floor(e / 4), 200000000);
 }
 
-// helper function for formatting numbers
-function addCommas(nStr){
+// ==========================================================
+// Helper function for formatting numbers
+// ==========================================================
+function addCommas(nStr)
+{
 	nStr += '';
 	x = nStr.split('.');
 	x1 = x[0];
 	x2 = x.length > 1 ? '.' + x[1] : '';
 	var rgx = /(\d+)(\d{3})/;
-	while (rgx.test(x1)){
+	while (rgx.test(x1))
+	{
 		x1 = x1.replace(rgx, '$1' + ',' + '$2');
 	}
 	return x1 + x2;
 }
 
-// Level, XpGiven, Title, Actions, Category
-function populateMethod(skill){
+// ==========================================================
+// Populates the method and header arrays
+// Array follows this format:
+// new Array(Level, XpGiven, Title, Actions, Category)
+// ==========================================================
+function populateMethod(skill)
+{
 	method = new Array();
 	category = new Array();
 	switch(skill)
 	{
-		case "agi": // Agility
+		// ======================================================================================================================================================================
+		// Agility
+		// ======================================================================================================================================================================
+		case "agi": 
 			category[0] = new Array("All Items");
 			category[1] = new Array("Agility Arena");
 			category[2] = new Array("Agility Courses");
@@ -235,7 +287,10 @@ function populateMethod(skill){
 			method[45] = new Array(85, 100,"Catch Snowy Knight (Barehanded)", 0, "Other Items");
 			method[46] = new Array(90, 125, "Catch Black Warlock (Barehanded)", 0, "Other Items");
 			break;
-		case "con": // Construction
+		// ======================================================================================================================================================================
+		// Construction
+		// ======================================================================================================================================================================
+		case "con":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Materials");
 			category[2] = new Array("Other Items");
@@ -254,7 +309,10 @@ function populateMethod(skill){
 			method[12] = new Array(50, 109.2, "Livid Farm - Plank Make x2 (one round)", 0, "Other Items");
 			method[13] = new Array(50, 546, "Livid Farm - Plank Make x10 (one cycle)", 0, "Other Items");
 			break;
-		case "coo": // Cooking
+		// ======================================================================================================================================================================
+		// Cooking
+		// ======================================================================================================================================================================
+		case "coo":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Cakes");
 			category[2] = new Array("Dairy");
@@ -440,7 +498,10 @@ function populateMethod(skill){
 			method[167] = new Array(96, 292, 'Moray & Gissel Potato', 0, 'Dungeoneering');
 			method[168] = new Array(99, 360.7, 'Moray & Edicap Potato', 0, 'Dungeoneering');
 			break;
-		case "cra": // Crtafting
+		// ======================================================================================================================================================================
+		// Crafting 
+		// ======================================================================================================================================================================
+		case "cra":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Battlestaves");
 			category[2] = new Array("Glassblowing");
@@ -837,7 +898,10 @@ function populateMethod(skill){
 			method[379] = new Array(1, 284.1, 'Tyrannoleather Chaps', 0, 'Dungeoneering Ranged Equipment');
 			method[380] = new Array(1, 482, 'Tyrannoleather Body', 0, 'Dungeoneering Ranged Equipment');
 			break;
-		case "div": // Divination
+		// ======================================================================================================================================================================
+		// Divination
+		// ======================================================================================================================================================================
+		case "div":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Pale Energy Products");
 			category[2] = new Array("Flickering Energy Products");
@@ -1054,7 +1118,10 @@ function populateMethod(skill){
 			method[200] = new Array(99, 24, 'Sign of the porter VI', 0, 'Incandescent Energy Products');
 			method[201] = new Array(99, 24, 'Portent of life', 0, 'Incandescent Energy Products');
 			break;
-		case "far": // Farming
+		// ======================================================================================================================================================================
+		// Farming
+		// ======================================================================================================================================================================
+		case "far":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Allotments");
 			category[2] = new Array("Bushes");
@@ -1265,7 +1332,10 @@ function populateMethod(skill){
 			method[195] = new Array(90, 94, 'Pick Spiritbloom', 0, 'Dungeoneering');
 			method[196] = new Array(95, 98.6, 'Pick Buckthorn', 0, 'Dungeoneering');
 			break;
-		case "fir": // Firemaking
+		// ======================================================================================================================================================================
+		// Firemaking
+		// ======================================================================================================================================================================
+		case "fir":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Barbarian Firemaking");
 			category[2] = new Array("Pyred Logs");
@@ -1331,7 +1401,10 @@ function populateMethod(skill){
 			method[56] = new Array(80, 225.8, 'Entgallow Branches', 0, 'Dungeoneering');
 			method[57] = new Array(90, 258.1, 'Grave Creeper Branches', 0, 'Dungeoneering');
 			break;
-		case "fis": // Fishing
+		// ======================================================================================================================================================================
+		// Fishing
+		// ======================================================================================================================================================================
+		case "fis":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Fish");
 			category[2] = new Array("Fishing Urns");
@@ -1390,7 +1463,10 @@ function populateMethod(skill){
 			method[51] = new Array(80, 153, 'Blue Crab', 0, 'Dungeoneering');
 			method[52] = new Array(90, 171, 'Cave Moray', 0, 'Dungeoneering');
 			break;
-		case "fle": // Fletching
+		// ======================================================================================================================================================================
+		// Fletching
+		// ======================================================================================================================================================================
+		case "fle":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Arrows");
 			category[2] = new Array("Bolts");
@@ -1658,7 +1734,10 @@ function populateMethod(skill){
 			method[256] = new Array(96, 259.8, 'Grave creeper longbow', 0, 'Dungeoneering');
 			method[257] = new Array(98, 203.4, 'Grave creeper staff', 0, 'Dungeoneering');
 			break;
-		case "her": // Herblore
+		// ======================================================================================================================================================================
+		// Herblore
+		// ======================================================================================================================================================================
+		case "her":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Barbarian Potions");
 			category[2] = new Array("Combined Potions and Mixes");
@@ -1882,7 +1961,10 @@ function populateMethod(skill){
 			method[213] = new Array(96, 2200, 'Overload + Extremes', 0, 'Herbs and Regular Potions');
 			method[214] = new Array(96, 2910, 'Overload + Extremes + Supers', 0, 'Herbs and Regular Potions');
 			break;
-		case "hun": // Hunter
+		// ======================================================================================================================================================================
+		// Hunter
+		// ======================================================================================================================================================================
+		case "hun":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Box Trap");
 			category[2] = new Array("Butterfly Net");
@@ -1997,7 +2079,10 @@ function populateMethod(skill){
 			method[99] = new Array(91, 434, 'Kingly Impling (Puro-Puro)', 0, 'Impetuous Impulses');
 			method[100] = new Array(91, 617, 'Kingly Impling (World)', 0, 'Impetuous Impulses');
 			break;
-		case "mag": // Magic
+		// ======================================================================================================================================================================
+		// Magic
+		// ======================================================================================================================================================================
+		case "mag":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Ancient Spellbook");
 			category[2] = new Array("Lunar Spellbook");
@@ -2089,7 +2174,10 @@ function populateMethod(skill){
 			method[84] = new Array(63, 73, 'Charge Fire Orb', 0, 'Regular Spellbook');
 			method[85] = new Array(66, 76, 'Charge Air Orb', 0, 'Regular Spellbook');
 			break;
-		case "min": // Mining
+		// ======================================================================================================================================================================
+		// Mining
+		// ======================================================================================================================================================================
+		case "min":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Ores");
 			category[2] = new Array("Mining Urns");
@@ -2138,7 +2226,10 @@ function populateMethod(skill){
 			method[41] = new Array(80, 131.5, 'Gorgonite', 0, 'Dungeoneering');
 			method[42] = new Array(90, 148, 'Promethium', 0, 'Dungeoneering');
 			break;
-		case "pra": // Prayer
+		// ======================================================================================================================================================================
+		// Prayer
+		// ======================================================================================================================================================================
+		case "pra":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Cremation");
 			category[2] = new Array("Items");
@@ -2229,7 +2320,10 @@ function populateMethod(skill){
 			method[81] = new Array(1, 375, 'Accursed urn', 0, 'Prayer Urns');
 			method[82] = new Array(1, 1875, 'Infernal urn', 0, 'Prayer Urns');
 			break;
-		case "run": // Runecrafting
+		// ======================================================================================================================================================================
+		// Runecrafting
+		// ======================================================================================================================================================================
+		case "run":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Combination Potions");
 			category[2] = new Array("Great Orb Project");
@@ -2351,7 +2445,10 @@ function populateMethod(skill){
 			method[111] = new Array(99, 106, 'Empowered Catalytic Staff', 0, 'Dungeoneering');
 			method[112] = new Array(99, 106, 'Empowered Catalytic Staff', 0, 'Dungeoneering');
 			break;
-		case "smi": // Smithing
+		// ======================================================================================================================================================================
+		// Smithing
+		// ======================================================================================================================================================================
+		case "smi":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Smelting");
 			category[2] = new Array("Smithing");
@@ -2643,7 +2740,10 @@ function populateMethod(skill){
 			method[281] = new Array(98, 380, 'Promethium 2h Sword', 0, 'Dungeoneering');
 			method[282] = new Array(99, 477.5, 'Promethium Platebody', 0, 'Dungeoneering');
 			break;
-		case "sum": // Summoning
+		// ======================================================================================================================================================================
+		// Summoning
+		// ======================================================================================================================================================================
+		case "sum":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Pouches");
 			category[2] = new Array("Pouches + Scroll Transformations");
@@ -3269,7 +3369,10 @@ function populateMethod(skill){
 			method[607] = new Array(97, 5.4, 'Sachem Worldbearer(Summon)', 0, 'Daemonheim Familiars');
 			method[608] = new Array(99, 5.5, 'Sachem Skinweaver(Summon)', 0, 'Daemonheim Familiars');
 			break;
-		case "thi": // Thieving
+		// ======================================================================================================================================================================
+		// Thieving
+		// ======================================================================================================================================================================
+		case "thi":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Looting Chests");
 			category[2] = new Array("Pickpocketing");
@@ -3359,7 +3462,10 @@ function populateMethod(skill){
 			method[80] = new Array(80, 1118.5, 'Chest (80)', 0, 'Dungeoneering Chests');
 			method[81] = new Array(90, 1410.5, 'Chest (90)', 0, 'Dungeoneering Chests');
 			break;
-		case "woo": // Woodcutting
+		// ======================================================================================================================================================================
+		// Woodcutting
+		// ======================================================================================================================================================================
+		case "woo":
 			category[0] = new Array("All Items");
 			category[1] = new Array("Trees");
 			category[2] = new Array("Woodcutting Urns");
