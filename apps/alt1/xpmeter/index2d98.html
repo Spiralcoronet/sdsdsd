@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from runeapps.org/apps/alt1/xpmeter/?page=xpmeter by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 17 Jan 2018 08:54:05 GMT -->
+<head>
+	<link rel="icon" href="icon.png" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="../../../runeappslib.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../nis/nis.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../nis/alt1-currentskin/skinstyle.css"/>
+	<script type="text/javascript" src="../../../runeappslib.js"></script>
+	<script type="text/javascript" src="../../../alt1lib.js"></script>
+	<script type="text/javascript" src="../../../imagedetect.js"></script>
+	<script type="text/javascript" src="../../../imagelibs/xpcounter.js"></script>
+	<script type="text/javascript" src="newscripts.js"></script>
+	<style type="text/css">
+		body{font-family:sans-serif; color:#ccc;}
+
+		.transbutton{width:12px; height:12px; z-index:11; cursor:pointer;}
+		.transbutton:hover{background-position:0px -12px;}
+		
+		#outputwrapper{position:absolute; cursor:default; top:10px; left:0px; right:0px; font-size:24px; text-align:center; height:28px; z-index:2;}
+			#xpoutputinner{display:inline-block; position:relative; white-space:nowrap; overflow-x:hidden; overflow-y:auto;}
+			#xpoutputinner.active{background:url('../../../nis/alt1-currentskin/background.png'); padding:0px 3px; border:1px solid rgba(128,128,128,0.5); margin-top:-1px;}
+				#xpskillicon{width:28px; height:28px; display:inline-block; background-image:url('skillicons.png'); vertical-align:bottom; margin-top:-5px; margin-right:-5px; background-position:0px 28px;}
+				#xpoutput{}
+				#xpdropdown{display:none;}
+				#xpoutputinner.active #xpdropdown{display:block;}
+					.xpdropdownopt{width:100%; font-size:18px;}
+					.xpdropdownopt:hover{background:rgba(0,0,0,0.5);}
+						.xpdropdownimg{width:20px; height:20px; display:inline-block; background:url('skillicons.png'); background-size:20px; vertical-align:bottom; margin-right:2px; background-position:0px 28px;}
+		#cnvcontainer{position:absolute; top:42px; left:5px; right:5px; bottom:5px; outline:1px solid rgba(128,128,128,0.5);}
+			#cnv{position:absolute; top:0px; left:0px; width:100%; height:100%; background:rgba(0,0,0,0.5);}
+			#cnvcontainer.showbd #cnv{opacity:0.3; background:none;}
+			#timer{user-select:none; -webkit-user-select:none; cursor:pointer; position:absolute; background:rgba(0,0,0,0.4); cursor:default; border-radius:3px; padding:1px; color:rgba(255, 255, 255, 0.8); right:1px; top:1px; font-size:10px; z-index:1; font-family:sans-serif; text-shadow:1px 1px 0px #000;}
+			#timer:hover{color:white; background:rgba(0,0,0,0.7);}
+			#trackedxp{position:absolute; background:rgba(0,0,0,0.4); cursor:default; border-radius:3px; padding:1px; color:rgba(255, 255, 255, 0.8); left:1px; top:1px; font-size:10px; z-index:1; font-family:sans-serif; text-shadow:1px 1px 0px #000;}
+			#trackedxp:hover{color:white; background:rgba(0,0,0,0.7);}
+			#trackedxp.hidden{display:none;}
+			#cnvcontainer.showbd #trackedxp{display:none;}
+			#breakdown{position:absolute; height:100%; width:100%; top:0px; left:0px; overflow-y:auto; display:none; background:rgba(0,0,0,0.5);}
+			#cnvcontainer.showbd #breakdown{display:block;}
+				#breakdowninner{position:absolute; width:100%; font-family:sans-serif; font-size:12px;}
+					.breakdownrow{position:absolute; left:22px; right:20px;}
+						.breakdownxp{position:absolute; left:0%;}
+						.breakdownamount{position:absolute; left:60%;}
+						.breakdownview{position:absolute; left:-18px; width:14px; height:14px; background-image:url('viewicon.png'); cursor:pointer;}
+						.breakdownview:hover{background-position:0px -14px;}
+			#breakdowncancel{position:absolute; bottom:2px; right:10px; background-image:url('cancelicon.png'); display:none;}
+			#cnvcontainer.showbd #breakdowncancel{display:block;}
+		#timerslidercontainer{position:absolute; top:0px; left:18px; right:60px; height:0px;}
+			#timerslider{position:absolute; top:0px; left:100%; margin-left:-3px; width:6px; height:10px; cursor:ew-resize;}
+				#timersliderinner{position:absolute; top:0px; left:2px; right:2px; bottom:4px; background:rgba(204,204,204,0.5);}
+				#timerslider:hover #timersliderinner{background:#ddd; bottom:0px;}
+		#slideroutput{position:absolute;}
+		
+		#menubutton{position:absolute; top:2px; left:2px; background-image:url('settingscog.png');}
+		#infobutton{position:absolute; top:15px; left:2px; background-image:url('infoicon.png');}
+		#breakbutton{position:absolute; top:28px; left:2px; background-image:url('listicon.png');}
+		
+	</style>
+</head>
+<body class="nis" onload="start()" onresize="resize();">
+	<div id="menubutton" class="transbutton" onclick="showMenu();" title="Menu"></div>
+	<div id="infobutton" class="transbutton" onclick="pagepopup('help_xpmeter',350,500);" title="Help"></div>
+	<div id="breakbutton" class="transbutton" onclick="togglebreak();" title="Show gain breakdown"></div> 
+	<div id="outputwrapper">
+		<div id="xpoutputinner" onclick="clickxp();">
+			<div id="xpskillicon" style="display:none;"></div>
+			<span id="xpoutput"></span>
+			<div id="xpdropdown"></div>
+		</div>
+	</div>
+	<div id="cnvcontainer">
+		<canvas id="cnv"></canvas>
+		<div id="timer" onclick="clicktimer();" ondblclick="doubleclicktimer();" title="Click to toggle timing mode&#xA;Doubleclick to restart in fixed start mode"></div>
+		<div id="trackedxp" class="hidden"></div>
+		<div id="breakdowncancel" class="transbutton" onclick="trackxp(0);" title="Remove tracker"></div>
+		<div id="breakdown">
+			<div id="breakdowninner"></div>
+		</div>
+	</div>
+	<div id="timerslidercontainer">
+		<div id="timerslider" onmousedown="timedragstart(); return false;" title="Drag to set warning time">
+			<div id="timersliderinner"></div>
+		</div>
+	</div>
+	<div id="audio" style="display:none">
+		<audio id="alerter" preload="auto"><source src="alarm1.wav" type="audio/wav"></audio>
+	</div>
+</body>
+
+<!-- Mirrored from runeapps.org/apps/alt1/xpmeter/?page=xpmeter by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 17 Jan 2018 08:54:09 GMT -->
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
